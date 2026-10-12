@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fast Fashion - Industry Insights</title>
+    <!-- Updated fonts for a fashion magazine aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Sleek Fashion Theme */
+            --bg-dark: #121212;
+            --panel-bg: #1e1e1e;
+            --neon-blue: #ff1493; /* Chic Pink */
+            --neon-purple: #ffd700; /* Gold */
+            --neon-pink: #00ffff; /* Modern Cyan */
+            --neon-green: #39ff14; /* Keep green for correct answers */
+            --neon-red: #ff073a;
+            --text-main: #f5f5f5;
+            --text-muted: #aaaaaa;
+            --radius-lg: 4px; /* Sharper, modern edges */
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+              radial-gradient(circle at 15% 40%, rgba(255, 215, 0, 0.05), transparent 30%),
+              radial-gradient(circle at 85% 60%, rgba(255, 20, 147, 0.05), transparent 30%);
+        }
+
+        #particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header-banner {
+            background-color: rgba(18, 18, 18, 0.95);
+            border-bottom: 2px solid var(--neon-purple);
+            padding: 15px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            z-index: 10;
+        }
+
+        .header-banner h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 0 5px var(--neon-purple);
+        }
+
+        .stats {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--neon-purple);
+        }
+
+        #app-container {
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .level-card {
+            background: var(--panel-bg);
+            border: 1px solid #333;
+            border-radius: var(--radius-lg);
+            padding: 2.2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.15);
+        }
+
+        .level-card h2, .level-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-main);
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .level-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 2px;
+            border: 1px solid #444;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--text-main);
+            border-radius: 0;
+            cursor: pointer;
+            text-transform: uppercase;
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: var(--text-main);
+            color: var(--bg-dark);
+            border-color: var(--text-main);
+            transform: translateY(-2px);
+        }
+
+        .btn-correct { background-color: rgba(57, 255, 20, 0.2) !important; border-color: var(--neon-green) !important; color: var(--neon-green) !important; }
+        .btn-wrong { background-color: rgba(255, 7, 58, 0.2) !important; border-color: var(--neon-red) !important; color: var(--neon-red) !important; }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 2rem;
+        }
+
+        .reading-container {
+            background: var(--panel-bg);
+            padding: 2.2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid #333;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .reading-container h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--neon-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .word-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #444;
+        }
+
+        .cloud-word {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            padding: 6px 14px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #555;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .cloud-word.found {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--neon-purple);
+            border-color: var(--neon-purple);
+            text-decoration: line-through;
+        }
+
+        .interactive-word {
+            cursor: pointer;
+            padding: 0 2px;
+            border-bottom: 1px dotted #888;
+            transition: color 0.2s;
+        }
+
+        .interactive-word.revealed {
+            color: var(--neon-purple);
+            font-weight: bold;
+            border-bottom: none;
+        }
+
+        hr { border: 0; height: 1px; background: #333; margin: 1.8rem 0; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 1px solid #555;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+        }
+
+        .flashcard-scene {
+            width: 100%;
+            height: 360px;
+            perspective: 1000px;
+            margin: 1.8rem 0;
+        }
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .flashcard.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid #444;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--text-main);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: var(--bg-dark);
+            border-color: var(--neon-purple);
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        .flashcard-examples {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            text-align: left;
+            width: 100%;
+            border-top: 1px solid #333;
+            padding-top: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .example-en { color: var(--neon-purple); font-weight: bold; }
+        .example-zh { color: var(--text-muted); font-size: 0.95rem; }
+
+        .sentence-dropzone, .word-bank {
+            min-height: 80px;
+            border: 1px dashed #555;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: var(--bg-dark);
+        }
+        .draggable-word {
+            padding: 10px 14px;
+            background: var(--panel-bg);
+            border: 1px solid #444;
+            color: var(--text-main);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+        .draggable-word:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-logo-frame {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            background: #ffffff;
+            padding: 15px;
+            border: 1px solid #333;
+            margin: 0 auto 1.5rem auto;
+            display: block;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.98); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop { animation: popIn 0.4s ease-out forwards; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body>
+    <canvas id="particles"></canvas>
+    
+    <header class="header-banner">
+        <h1>Vogue Insights // Fast Fashion</h1>
+        <div class="stats">
+            <span id="xp-counter">✨ 0 Style Points</span>
+        </div>
+    </header>
+    
+    <main id="app-container"></main>
+
+    <script>
+        function initParticles() {
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particlesArray = [];
+            const colors = ['#ffffff', '#ffd700', '#aaaaaa'];
+
+            for (let i = 0; i < 30; i++) {
+                particlesArray.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.5 + 0.5,
+                    speedY: Math.random() * 0.5 - 0.25,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    let p = particlesArray[i];
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('particles');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // --- FASHION BRANDS & ITEMS DATABASE ---
+        const spaceDB = [
+            { name: "Haute Couture", category: "High-end Fashion", img: "https://images.unsplash.com/photo-1550614000-4b95d415d861?w=200&q=80" },
+            { name: "Fast Fashion Brand", category: "Mass Market", img: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=200&q=80" },
+            { name: "Sustainable Wear", category: "Eco-Friendly", img: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=200&q=80" },
+            { name: "Textile Factory", category: "Manufacturing", img: "https://images.unsplash.com/photo-1558025137-0b411f32a2c1?w=200&q=80" }
+        ];
+
+        const ALL_MISSIONS = [
+            "Haute Couture", "Fast Fashion Brand", "Sustainable Wear", "Textile Factory", 
+            "Boutique", "Vintage Store", "Runway Show", "Upcycling Studio"
+        ];
+
+        // --- EMOJI FASHION GUESS ---
+        const spaceAppsDB = [
+            { name: "Chemical Dyes", emoji: "🧪🎨💧" },
+            { name: "Garment Workers", emoji: "🧵👷‍♀️🏭" },
+            { name: "Clothing Waste", emoji: "👕🗑️🔥" },
+            { name: "Cotton Farming", emoji: "🌱🚜👕" },
+        ];
+
+        const ALL_SPACE_APPS = [
+            "Chemical Dyes", "Garment Workers", "Clothing Waste", "Cotton Farming",
+            "Online Shopping", "Fashion Show", "Sustainable Recycling"
+        ];
+
+        // --- COURSE DATA ---
+        const courseData = {
+          levels: [
+            {
+              id: "basic",
+              title: "Unit 3: Fast Fashion - Basic",
+              description: "Explore the reality of consumers, clothing history, and the hidden costs of the fashion industry.",
+              image: "https://images.unsplash.com/photo-1489987707023-afc82478163a?auto=format&fit=crop&w=800&q=80",
+              reading: [
+               { section: "Consumers", text: "All people are consumers of some kind. The word \"consume\" means to use something. Everything alive has needs. Our most basic needs are food and water. We must consume both to stay alive. Today, the word \"consumer\" usually means someone who buys products, rather than someone who eats food. If you buy products, you are a consumer. One product we buy is clothing. I think most of us would agree that we need clothes, and they aren't just something that we want. However, very few of us are making our own clothes. When we choose clothes, we often think more about how they make us feel than what we need. This brings us to fashion and the huge amount of money we spend on it every year." },
+               { section: "What Is Fashion?", text: "Fashion is the changing style of the things we wear. It isn't just the clothes we wear, but all of the things we put on our bodies to decorate ourselves. This includes shoes and accessories we like to show off. These could be necklaces, bracelets, rings, earrings, or even the bags we choose to carry or put around our shoulders. Everyone is unique and finds different ways to show it. For many of us we do that through what we wear, or even how we wear something. Even the same T-shirt can show different styles depending on how someone wears it. Our clothes can show which groups we belong to or who our friends might be. Our clothes and fashion say something about ourselves, and people can spend a lot of money to try to say something with the things they wear." },
+                { section: "The History of Clothing", text: "Long ago, people made clothes from plants they grew or animals they hunted. People first had to turn these plants or animals into materials for clothing. Then they used those materials to make clothes. For thousands of years, all of that work had to be done by hand. It was hard work, took a long time, and most of all it was expensive! Over time, tools became better, and technology made it easier and quicker to make clothes. Each step took less time and effort. New tools made the work much simpler and faster. Farming tools improved, but the biggest changes were the machines that could work many times faster than any one person. Since the late 1700s, making clothes has become faster and cheaper. Electricity and modern machines changed how people bought and used clothes. More and more people had enough money to buy another shirt, an extra pair of pants, and then eventually a whole closet full of things to wear. Now, more consumers could afford things they wanted, not just things they needed." },
+                { section: "The Global Fashion Industry", text: "Companies can make a lot of money by selling clothes people want at prices they can afford. Companies can now sell clothes around the world, not just in one city or country. If they can shape the style and fashion that people across the world are buying, they can now sell to billions of people. These fashion companies compete to get your money." },
+                { section: "The Need for Speed", text: "Companies must quickly make clothes that are popular that year or season. This is called \"fast fashion.\" Companies must get popular clothes into stores quickly and offer the sizes consumers want. The clothes must be ready when customers want to buy them! Unfortunately, making things quickly can sometimes lower their quality." },
+                { section: "The Problem with Quality", text: "The most obvious problem is that a lot of these clothes are cheap. Not just cheap in price, but cheaply made. They often fall apart after only a short time or a few washes. However, if clothes don't cost a lot, people don't mind throwing them away and getting something new. People get to wear something newer and feel cooler! Who cares if you have to throw them away if you can easily buy more?" },
+                { section: "The Hidden Costs - The Environment", text: "The biggest problems are often the ones we do not see. The farms and factories are far away from where we live, and the land pays the price for our cheap clothes. Farms use fertilizers to grow plants more quickly as well as pesticides to kill insects. These chemicals can pollute the land and water. Factories also use dyes to color our clothes, and these dyes are often terrible for the environment as well. This pollution can harm the people, animals, and plants living nearby." },
+                { section: "The Hidden Costs - The Workers", text: "There are now more than a hundred billion (100,000,000,000) pieces of clothing made every year. Machines make clothes faster and cheaper, but we still need many workers to produce so much clothing. This is especially true when it comes to sewing all of the clothes together. These workers are often paid too little and may have to work long hours without breaks. There can even be children working in these places where workers are known to work 11 to 14 hours in a day. Workers can get hurt by repeating the same movements, using dangerous machines, or breathing harmful chemicals. When workers become too sick or injured to work, companies may simply hire new workers." },
+                { section: "The Hidden Costs – Clothing Waste", text: "Every year, clothing companies will throw away or burn tens of millions of pieces of clothing that didn't sell. They could give these clothes away, but they want to protect their brand's image. Instead, they may destroy or bury the clothes, creating even more waste and pollution." },
+                { section: "A Change for the Better", text: "Human rights organizations have shown consumers how some companies treat their workers. This pressure has forced some companies to improve. Companies like UNIQLO have faced criticism about where they get their cotton and which factories they use. Some have started making changes. Unfortunately, changes often happen only after serious problems become public and people have already suffered. Every year they promise to make sure they follow the laws and protect the land and workers. However, every year there are new stories and the companies making all of the money say they didn't know, and make a promise to do better again." },
+                { section: "Our Responsibility", text: "Next time you go shopping and think about how cheap that new shirt is, remember that someone, somewhere is paying for it. One way that we consumers can make a difference is by choosing carefully how we spend our money. We are all busy, and it is hard to know everything about the clothes we buy. We can still slow down and ask ourselves if we really need to buy that new thing. We can't control the whole world, but we can control what we do." },
+
+              ],
+              vocabulary: [
+                { word: "consumer", chinese: "消費者", icon: "🛍️", examples: [
+                    { en: "A conscious consumer cares about how products are made.", zh: "有意識的消費者會關心產品是如何製造的。" }
+                ]},
+                { word: "accessories", chinese: "配件、飾品", icon: "💍", examples: [
+                    { en: "She bought some accessories to match her new dress.", zh: "她買了一些配件來搭配她的新洋裝。" }
+                ]},
+                { word: "quality", chinese: "品質", icon: "⭐", examples: [
+                    { en: "Fast fashion often sacrifices quality for speed.", zh: "快時尚通常為了速度而犧牲品質。" }
+                ]},
+                { word: "fertilizers", chinese: "肥料", icon: "🌱", examples: [
+                    { en: "Farms use fertilizers to grow cotton more quickly.", zh: "農場使用肥料來加速棉花的生長。" }
+                ]},
+                { word: "pesticides", chinese: "殺蟲劑、農藥", icon: "🧪", examples: [
+                    { en: "Pesticides used on crops can pollute the land and water.", zh: "用於農作物的殺蟲劑會污染土地和水資源。" }
+                ]},
+                { word: "dyes", chinese: "染料", icon: "🎨", examples: [
+                    { en: "Factories use chemical dyes to color our clothes.", zh: "工廠使用化學染料為我們的衣服染色。" }
+                ]},
+                { word: "waste", chinese: "浪費、廢棄物", icon: "🗑️", examples: [
+                    { en: "Destroying unsold clothes creates massive waste.", zh: "銷毀未售出的衣服會造成巨大的浪費。" }
+                ]},
+                { word: "fall apart", chinese: "破損、壞掉", icon: "✂️", examples: [
+                    { en: "Cheaply made clothes often fall apart after a few washes.", zh: "製作粗糙的衣服洗幾次後通常就會破損。" }
+                ]}
+              ],
+              questions: [
+                { type: "fill", q: "1. Rings, necklaces, and bags that you wear or carry are called __________.", answer: "accessories" },
+                { type: "mc", q: "2. What are the two types of chemicals polluting the land and water where we farm?", options: ["Perfumes and lotions", "Fertilizers and pesticides", "Dyes and soaps", "Plastics and metals"], answer: 1 },
+                { type: "mc", q: "3. Which of the following is NOT mentioned as a hidden cost of fast fashion?", options: ["Pollution from factories and farms.", "Dangerous work.", "Large amounts of clothing waste.", "Higher prices for customers."], answer: 3 },
+                { type: "fill", q: "4. When air, land, or water becomes dirty and harmful, it is called __________.", answer: "pollution" }
+              ],
+              unscrambleWords: ["consumer", "fashion", "accessories", "pollution", "quality"],
+              sentences: [
+                "All people are consumers of some kind.",
+                "Fashion is the changing style of the things we wear.",
+                "These chemicals can pollute the land and water."
+              ],
+              synonyms: [
+                { word: "consume", synonym: "use" },
+                { word: "clothing", synonym: "apparel" },
+                { word: "cheap", synonym: "inexpensive" },
+                { word: "destroy", synonym: "ruin" }
+              ]
+            },
+            {
+              id: "intermediate",
+              title: "Unit 3: Fast Fashion - Intermediate",
+              description: "Dive deeper into supply chain ethics, sustainability, and the future of fashion.",
+              image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=800&q=80",
+              reading: [
+                { section: "Placeholder Section", text: "[PLACEHOLDER FOR THE INTERMEDIATE READING CONTENT]" }
+              ],
+              vocabulary: [],
+              questions: [],
+              unscrambleWords: [],
+              sentences: [],
+              synonyms: []
+            }
+          ]
+        };
+
+        // --- APPLICATION LOGIC ---
+        const appContainer = document.getElementById('app-container');
+        let currentLevel = null;
+        let userXP = parseInt(localStorage.getItem('fashionLabXP')) || 0;
+        
+        let currentReadingIndex = 0; 
+        let currentQuestionIndex = 0;
+        let currentFlashcardIndex = 0;
+        let currentVocabUnscrambleIndex = 0;
+        let currentSentenceIndex = 0;
+        let missionChallengeIndex = 0;
+        let appChallengeIndex = 0;
+        let synonymChallengeIndex = 0;
+        
+        let wordsToFind = [];
+        let activeMissions = [];
+        let activeSpaceApps = [];
+        let activeSynonyms = [];
+
+        function init() {
+            initParticles();
+            updateXP(0);
+            renderHome();
+        }
+
+        function updateXP(amount) {
+            userXP += amount;
+            localStorage.setItem('fashionLabXP', userXP);
+            document.getElementById('xp-counter').textContent = `✨ ${userXP} Style Points`;
+        }
+
+        function renderHome() {
+            appContainer.innerHTML = `
+                <div class="card-grid animate-pop">
+                    ${courseData.levels.map(level => `
+                        <div class="level-card" onclick="startLevel('${level.id}')">
+                            <img src="${level.image}" alt="${level.title}" class="level-image">
+                            <h2>${level.title}</h2>
+                            <p style="color: var(--text-muted); line-height: 1.5;">${level.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function startLevel(levelId) {
+            currentLevel = courseData.levels.find(l => l.id === levelId);
+            renderMenu();
+        }
+
+        function renderMenu() {
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderHome()">← Switch Level</button>
+                <h1 style="text-align:center; font-family:'Playfair Display', serif; color: var(--text-main);">${currentLevel.title.toUpperCase()}</h1>
+                <div class="card-grid animate-pop">
+                    <div class="level-card" onclick="startReading()">
+                        <div style="font-size: 3rem;">📖</div>
+                        <h3>Reading</h3>
+                    </div>
+                    <div class="level-card" onclick="startQuiz()">
+                        <div style="font-size: 3rem;">❓</div>
+                        <h3>Knowledge Check</h3>
+                    </div>
+                    <div class="level-card" onclick="startFlashcards()">
+                        <div style="font-size: 3rem;">🎴</div>
+                        <h3>Vocab Flashcards</h3>
+                    </div>
+                    <div class="level-card" onclick="startVocabUnscramble()">
+                        <div style="font-size: 3rem;">🔀</div>
+                        <h3>Unscramble</h3>
+                    </div>
+                    <div class="level-card" onclick="startSentenceUnscramble()">
+                        <div style="font-size: 3rem;">🧩</div>
+                        <h3>Sentence Builder</h3>
+                    </div>
+                    <div class="level-card" onclick="startSynonymMatch()">
+                         <div style="font-size: 3rem;">🔗</div>
+                         <h3>Synonym Match</h3>
+                    </div>
+                    <div class="level-card" onclick="startMissionChallenge()">
+                         <div style="font-size: 3rem;">📸</div>
+                        <h3>Fashion Concepts</h3>
+                    </div>
+                    <div class="level-card" onclick="startAppChallenge()">
+                        <div style="font-size: 3rem;">💡</div>
+                         <h3>Emoji Decode</h3>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ACTIVITY 1: READING WITH PAGINATION ---
+        function startReading() {
+            if(currentLevel.reading.length === 0 || currentLevel.reading[0].text.includes("PLACEHOLDER")) {
+                alert("Content coming soon for this level!");
+                return;
+            }
+            currentReadingIndex = 0; 
+            renderReading();
+        }
+
+        function renderReading() {
+            wordsToFind = currentLevel.vocabulary.map(v => v.word.toLowerCase());
+            const cloudHTML = currentLevel.vocabulary.map(v => 
+                `<span class="cloud-word" id="cloud-${v.word.replace(/\s+/g, '-').toLowerCase()}">${v.word}</span>`
+            ).join('');
+
+            const isFirst = currentReadingIndex === 0;
+            const isLast = currentReadingIndex === currentLevel.reading.length - 1;
+            const currentPassage = currentLevel.reading[currentReadingIndex];
+
+            const interactiveText = currentPassage.text.replace(/([a-zA-Z0-9-]+)/g, '<span class="interactive-word" onclick="checkWord(this)">$1</span>');
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size: 0.9rem;">
+                        <span>SECTION ${currentReadingIndex + 1} OF ${currentLevel.reading.length}</span>
+                    </div>
+
+                    <h2 style="margin-top:0; color: #fff;">Find & Highlight Key Vocab</h2>
+                    <div class="word-cloud">
+                        ${cloudHTML}
+                    </div>
+                    
+                    <h2 style="color: var(--neon-purple);">❖ ${currentPassage.section}</h2>
+                    <p style="font-size: 1.15rem; line-height: 1.85;">${interactiveText}</p>
+                    <hr>
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateReading(-1)" ${isFirst ? 'disabled style="opacity:0.5"' : ''}>Previous</button>
+                        ${isLast ? 
+                            `<button class="action-btn btn-correct" style="width:48%;" onclick="updateXP(25); startQuiz();">Complete Reading (+25 SP)</button>` : 
+                            `<button class="action-btn" style="width:48%;" onclick="navigateReading(1)">Next</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        function navigateReading(direction) {
+            currentReadingIndex += direction;
+            renderReading();
+        }
+
+        function checkWord(element) {
+            const clickedWord = element.innerText.toLowerCase().trim();
+            const matchedVocab = wordsToFind.find(word => {
+                if (word === clickedWord) return true;
+                const phraseWords = word.split(' ');
+                return phraseWords.includes(clickedWord);
+            });
+
+            if (matchedVocab) {
+                element.classList.add('revealed');
+                const cloudEl = document.getElementById(`cloud-${matchedVocab.replace(/\s+/g, '-')}`);
+                if (cloudEl && !cloudEl.classList.contains('found')) {
+                    cloudEl.classList.add('found');
+                    updateXP(5);
+                }
+            } else {
+                element.classList.add('shake');
+                setTimeout(() => element.classList.remove('shake'), 400);
+            }
+        }
+
+        // --- ACTIVITY 2: QUIZ ---
+        function startQuiz() {
+            if(currentLevel.questions.length === 0) {
+                alert("Quiz coming soon for this level!");
+                return;
+            }
+            currentQuestionIndex = 0;
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const qData = currentLevel.questions[currentQuestionIndex];
+            const isLast = currentQuestionIndex === currentLevel.questions.length - 1;
+            const isFirst = currentQuestionIndex === 0;
+            let interactionHTML = '';
+            
+            if (qData.type === 'mc') {
+                interactionHTML = `
+                    <div id="mc-options" style="display:flex; flex-direction:column; gap:10px; margin-top: 1.5rem;">
+                        ${qData.options.map((opt, index) => `
+                            <button class="action-btn" style="text-align: left; text-transform:none; padding:1rem;" 
+                            onclick="checkQuizAnswer(this, ${index}, ${qData.answer}, 'mc')">${opt}</button>
+                        `).join('')}
+                    </div>`;
+            } else if (qData.type === 'fill') {
+                interactionHTML = `
+                    <div style="margin-top: 1.5rem;">
+                        <input type="text" id="fill-input" placeholder="Type answer here..." autocomplete="off">
+                        <button class="action-btn" style="margin-top:1rem;" onclick="checkQuizAnswer(document.getElementById('fill-input'), null, '${qData.answer}', 'fill')">Submit Answer</button>
+                    </div>`;
+            }
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size: 0.9rem;">
+                        <span>QUESTION ${currentQuestionIndex + 1} OF ${currentLevel.questions.length}</span>
+                    </div>
+                    <p style="font-size: 1.25rem; font-weight: bold; color: var(--text-main); line-height:1.5;">${qData.q}</p>
+                    ${interactionHTML}
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateQuiz(-1)" ${isFirst ? 'disabled style="opacity:0.5"' : ''}>Previous</button>
+                        <button class="action-btn" style="width:48%;" onclick="navigateQuiz(1)">${isLast ? 'Finish' : 'Next'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkQuizAnswer(element, selectedIndex, correctAnswer, type) {
+            if (type === 'mc') {
+                const allButtons = element.parentElement.querySelectorAll('button');
+                allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+                if (selectedIndex === correctAnswer) {
+                    element.classList.add('btn-correct');
+                    updateXP(15);
+                } else {
+                    element.classList.add('btn-wrong');
+                    element.classList.add('shake');
+                    allButtons[correctAnswer].classList.add('btn-correct');
+                }
+            } else if (type === 'fill') {
+                const userAnswer = element.value.trim().toLowerCase();
+                const actualAnswer = correctAnswer.toLowerCase();
+                if (userAnswer.includes(actualAnswer) || actualAnswer.includes(userAnswer)) {
+                    element.style.borderColor = 'var(--neon-green)';
+                    element.style.color = 'var(--neon-green)';
+                    updateXP(15);
+                    alert("Correct!");
+                } else {
+                    element.style.borderColor = 'var(--neon-red)';
+                    element.classList.add('shake');
+                    setTimeout(() => element.classList.remove('shake'), 400);
+                }
+            }
+        }
+
+        function navigateQuiz(direction) {
+            currentQuestionIndex += direction;
+            if (currentQuestionIndex >= currentLevel.questions.length) {
+                alert("Knowledge Check Completed!");
+                renderMenu();
+            } else {
+                renderQuiz();
+            }
+        }
+
+        // --- ACTIVITY 3: FLASHCARDS ---
+        function startFlashcards() {
+            if(currentLevel.vocabulary.length === 0) {
+                alert("Flashcards coming soon!");
+                return;
+            }
+            currentFlashcardIndex = 0;
+            renderFlashcardUI();
+        }
+
+        function renderFlashcardUI() {
+            const vocab = currentLevel.vocabulary;
+            const currentCard = vocab[currentFlashcardIndex];
+            
+            let examplesHTML = '';
+            if (currentCard.examples && currentCard.examples.length > 0) {
+                examplesHTML = `<div class="flashcard-examples">` + 
+                    currentCard.examples.map(ex => `
+                        <div class="example-item">
+                            <div class="example-en">${ex.en}</div>
+                            <div class="example-zh">${ex.zh}</div>
+                        </div>
+                    `).join('') + `</div>`;
+            }
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="text-align:center;">
+                    <h2 style="margin-top:0;">Vocabulary</h2>
+                    <p style="color:var(--text-muted); font-size:0.9rem;">CARD ${currentFlashcardIndex + 1} OF ${vocab.length}</p>
+                    
+                    <div class="flashcard-scene" onclick="flipCard(this)">
+                        <div class="flashcard">
+                            <div class="flashcard-face flashcard-front">
+                                ${currentCard.word}
+                            </div>
+                            <div class="flashcard-face flashcard-back">
+                                <div style="font-size: 2.8rem; margin: 15px 0 5px 0;">${currentCard.icon}</div>
+                                <div style="font-size: 1.5rem; margin-bottom: 10px;">${currentCard.chinese}</div>
+                                ${examplesHTML}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="action-btn" style="width:48%;" onclick="navigateFlashcard(-1)">Previous</button>
+                        <button class="action-btn" style="width:48%;" onclick="navigateFlashcard(1)">Next</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function flipCard(sceneElement) {
+            const card = sceneElement.querySelector('.flashcard');
+            card.classList.toggle('is-flipped');
+        }
+
+        function navigateFlashcard(direction) {
+            const vocab = currentLevel.vocabulary;
+            currentFlashcardIndex += direction;
+            if (currentFlashcardIndex < 0) currentFlashcardIndex = vocab.length - 1;
+            if (currentFlashcardIndex >= vocab.length) currentFlashcardIndex = 0;
+            renderFlashcardUI();
+        }
+
+        // --- ACTIVITY 4: UNSCRAMBLE VOCAB ---
+        function startVocabUnscramble() {
+            if(currentLevel.unscrambleWords.length === 0) {
+                alert("Unscramble coming soon!");
+                return;
+            }
+            currentVocabUnscrambleIndex = 0;
+            renderVocabUnscramble();
+        }
+
+        function scrambleString(str) {
+            let arr = str.split('');
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            let scrambled = arr.join('');
+            if (scrambled === str && str.length > 3) return scrambleString(str);
+            return scrambled;
+        }
+
+        function renderVocabUnscramble() {
+            const wordsList = currentLevel.unscrambleWords;
+            const originalWord = wordsList[currentVocabUnscrambleIndex];
+            const scrambledWord = scrambleString(originalWord);
+            
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="text-align:center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>WORD ${currentVocabUnscrambleIndex + 1} OF ${wordsList.length}</span>
+                    </div>
+                    <h2 style="margin-top:0;">Unscramble</h2>
+                    
+                    <div style="font-size: 2.5rem; font-weight: bold; letter-spacing: 5px; color: var(--neon-purple); margin: 1.8rem 0; font-family: 'Playfair Display', serif;">
+                        ${scrambledWord.toUpperCase()}
+                    </div>
+                    
+                    <input type="text" id="unscramble-input" placeholder="Type correct word..." autocomplete="off">
+                    
+                    <button class="action-btn" onclick="checkVocabUnscramble('${originalWord}')">Check</button>
+                </div>
+            `;
+        }
+
+        function checkVocabUnscramble(correctWord) {
+            const inputEl = document.getElementById('unscramble-input');
+            const userWord = inputEl.value.trim().toLowerCase();
+            
+            if (userWord === correctWord.toLowerCase()) {
+                inputEl.style.borderColor = 'var(--neon-green)';
+                inputEl.style.color = 'var(--neon-green)';
+                updateXP(15);
+                setTimeout(() => {
+                    currentVocabUnscrambleIndex++;
+                    if (currentVocabUnscrambleIndex >= currentLevel.unscrambleWords.length) {
+                        alert("Great job! (+50 SP)");
+                        updateXP(50);
+                        renderMenu();
+                    } else {
+                        renderVocabUnscramble();
+                    }
+                }, 800);
+            } else {
+                inputEl.style.borderColor = 'var(--neon-red)';
+                inputEl.classList.add('shake');
+                setTimeout(() => inputEl.classList.remove('shake'), 400);
+            }
+        }
+
+        // --- ACTIVITY 5: SENTENCE BUILDER ---
+        function startSentenceUnscramble() {
+            if(currentLevel.sentences.length === 0) {
+                alert("Sentence Builder coming soon!");
+                return;
+            }
+            currentSentenceIndex = 0;
+            renderSentenceUnscramble();
+        }
+
+        function renderSentenceUnscramble() {
+            const sentencesList = currentLevel.sentences;
+            const sentence = sentencesList[currentSentenceIndex];
+            let words = sentence.split(' ');
+            
+            let scrambledWords = [...words];
+            for (let i = scrambledWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [scrambledWords[i], scrambledWords[j]] = [scrambledWords[j], scrambledWords[i]];
+            }
+
+            const wordsHTML = scrambledWords.map((w, i) => 
+                `<div class="draggable-word" id="word-${i}" onclick="moveWordOnClick(this)">${w}</div>`
+            ).join('');
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>SENTENCE ${currentSentenceIndex + 1} OF ${sentencesList.length}</span>
+                    </div>
+                    <h2 style="margin-top:0;">Build the Sentence</h2>
+                    <p style="color:var(--text-muted);">Click words in order.</p>
+                    
+                    <div id="sentence-answer-zone" class="sentence-dropzone"></div>
+                    <div id="sentence-word-bank" class="word-bank">${wordsHTML}</div>
+                    
+                    <button class="action-btn" onclick="checkSentenceUnscramble('${sentence.replace(/'/g, "\\'")}')">Submit</button>
+                </div>
+            `;
+        }
+
+        function moveWordOnClick(element) {
+            const answerZone = document.getElementById('sentence-answer-zone');
+            const wordBank = document.getElementById('sentence-word-bank');
+            
+            if (element.parentNode.id === 'sentence-word-bank') {
+                answerZone.appendChild(element);
+            } else {
+                wordBank.appendChild(element);
+            }
+        }
+
+        function checkSentenceUnscramble(correctSentence) {
+            const answerZone = document.getElementById('sentence-answer-zone');
+            const currentWords = Array.from(answerZone.children).map(el => el.innerText);
+            const userSentence = currentWords.join(' ');
+            
+            if (userSentence === correctSentence) {
+                answerZone.style.borderColor = 'var(--neon-green)';
+                updateXP(25);
+                setTimeout(() => {
+                    currentSentenceIndex++;
+                    if (currentSentenceIndex >= currentLevel.sentences.length) {
+                        alert("Excellent! (+50 SP)");
+                        updateXP(50);
+                        renderMenu();
+                    } else {
+                        renderSentenceUnscramble();
+                    }
+                }, 1000);
+            } else {
+                answerZone.style.borderColor = 'var(--neon-red)';
+                answerZone.classList.add('shake');
+                setTimeout(() => answerZone.classList.remove('shake'), 400);
+            }
+        }
+
+        // --- ACTIVITY 6: FASHION CONCEPTS ---
+        function startMissionChallenge() {
+            missionChallengeIndex = 0;
+            activeMissions = [...spaceDB].sort(() => 0.5 - Math.random());
+            renderMissionChallenge();
+        }
+
+        function renderMissionChallenge() {
+            if (missionChallengeIndex >= activeMissions.length) {
+                alert("Concept Challenge Complete!");
+                return renderMenu();
+            }
+
+            const currentMission = activeMissions[missionChallengeIndex];
+            
+            let options = [currentMission.name];
+            let pool = ALL_MISSIONS.filter(name => name !== currentMission.name);
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random()); 
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1.5rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>CONCEPT ${missionChallengeIndex + 1} OF ${activeMissions.length}</span>
+                    </div>
+
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 2px; margin-bottom: 1.5rem; border-left: 2px solid var(--neon-purple); text-align: center;">
+                        <span style="color: var(--text-main); font-size: 1.1rem; font-weight:bold;">${currentMission.category}</span>
+                    </div>
+
+                    <div id="mission-feedback-zone">
+                        <img src="${currentMission.img}" alt="Concept Image" class="ai-logo-frame">
+                    </div>
+
+                    <h3 style="color: #fff; margin-bottom: 1.2rem;">Identify this concept:</h3>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.1rem 0.8rem; font-size: 0.95rem; line-height: 1.3;" onclick="checkMissionGuess(this, '${opt}', '${currentMission.name}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkMissionGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(20);
+                setTimeout(() => {
+                    missionChallengeIndex++;
+                    renderMissionChallenge();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                const feedbackZone = document.getElementById('mission-feedback-zone');
+                feedbackZone.innerHTML = `
+                    <div style="color: var(--neon-red); font-size: 1.3rem; font-weight: bold; margin: 2rem 0; font-family: 'Playfair Display', serif;">
+                        Incorrect! This is ${correct}.
+                    </div>`;
+                setTimeout(() => {
+                    missionChallengeIndex++;
+                    renderMissionChallenge(); 
+                }, 2000);
+            }
+        }
+
+        // --- ACTIVITY 7: EMOJI DECODE CHALLENGE ---
+        function startAppChallenge() {
+            appChallengeIndex = 0;
+            activeSpaceApps = [...spaceAppsDB].sort(() => 0.5 - Math.random());
+            renderAppChallenge();
+        }
+
+        function renderAppChallenge() {
+            if (appChallengeIndex >= activeSpaceApps.length) {
+                alert("Emoji Challenge Complete!");
+                return renderMenu();
+            }
+
+            const currentApp = activeSpaceApps[appChallengeIndex];
+            
+            let options = [currentApp.name];
+            let pool = ALL_SPACE_APPS.filter(n => n !== currentApp.name);
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random()); 
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1.5rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>EMOJI ${appChallengeIndex + 1} OF ${activeSpaceApps.length}</span>
+                    </div>
+
+                    <div id="app-feedback-zone" style="min-height: 200px; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--neon-purple); border-radius: 2px; margin-bottom: 1.8rem;">
+                        <span style="font-size: 4.5rem; user-select: none;">${currentApp.emoji}</span>
+                    </div>
+
+                    <h3 style="color: #fff; margin-bottom: 1.2rem;">What does this represent?</h3>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.1rem 0.6rem; font-size: 0.95rem; line-height: 1.3;" onclick="checkAppGuess(this, '${opt}', '${currentApp.name}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkAppGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(20);
+                setTimeout(() => {
+                    appChallengeIndex++;
+                    renderAppChallenge();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                const feedbackZone = document.getElementById('app-feedback-zone');
+                feedbackZone.innerHTML = `
+                    <span style="display: block; color: var(--neon-red); font-size: 1.2rem; font-weight: bold; margin: 1.5rem 0; font-family: 'Playfair Display', serif;">
+                        Incorrect! Represents: ${correct}.
+                    </span>`;
+                setTimeout(() => {
+                    appChallengeIndex++;
+                    renderAppChallenge(); 
+                }, 2000);
+            }
+        }
+
+        // --- ACTIVITY 8: SYNONYM MATCH CHALLENGE ---
+        function startSynonymMatch() {
+            if (!currentLevel.synonyms || currentLevel.synonyms.length === 0) {
+                alert("No synonyms available for this level.");
+                return;
+            }
+            synonymChallengeIndex = 0;
+            activeSynonyms = [...currentLevel.synonyms].sort(() => 0.5 - Math.random());
+            renderSynonymMatch();
+        }
+
+        function renderSynonymMatch() {
+            if (synonymChallengeIndex >= activeSynonyms.length) {
+                alert("Synonym Challenge Complete. (+50 SP Bonus)");
+                updateXP(50);
+                return renderMenu();
+            }
+
+            const currentPair = activeSynonyms[synonymChallengeIndex];
+            
+            let options = [currentPair.synonym];
+            let pool = currentLevel.synonyms
+                .map(s => s.synonym)
+                .filter(syn => syn !== currentPair.synonym);
+            
+            pool.sort(() => 0.5 - Math.random());
+            options.push(...pool.slice(0, 3));
+            options.sort(() => 0.5 - Math.random());
+
+            appContainer.innerHTML = `
+                <button class="action-btn" style="width:auto; margin-bottom: 1rem;" onclick="renderMenu()">← Back to Hub</button>
+                <div class="reading-container animate-pop" style="padding-bottom: 1rem; text-align: center;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); margin-bottom:1rem; font-size:0.9rem;">
+                        <span>SYNONYM ${synonymChallengeIndex + 1} OF ${activeSynonyms.length}</span>
+                    </div>
+
+                    <h2 style="color: #fff; margin-bottom: 0.5rem;">Find the closest synonym for:</h2>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1.8rem; border-radius: 2px; margin-bottom: 2rem; border: 1px dotted #666; text-align: center;">
+                        <strong style="color: var(--neon-purple); font-family: 'Playfair Display', serif; font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase;">
+                            ${currentPair.word}
+                        </strong>
+                    </div>
+
+                    <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        ${options.map(opt => `
+                            <button class="action-btn" style="margin-top: 0; padding: 1.2rem; font-size: 1.05rem;" onclick="checkSynonymGuess(this, '${opt}', '${currentPair.synonym}')">${opt}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkSynonymGuess(btn, selected, correct) {
+            const allButtons = btn.parentElement.querySelectorAll('button');
+            allButtons.forEach(b => b.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                btn.classList.add('btn-correct');
+                updateXP(15);
+                setTimeout(() => {
+                    synonymChallengeIndex++;
+                    renderSynonymMatch();
+                }, 1000);
+            } else {
+                btn.classList.add('btn-wrong');
+                btn.classList.add('shake');
+                
+                allButtons.forEach(b => {
+                    if (b.innerText === correct) {
+                        b.classList.add('btn-correct');
+                    }
+                });
+
+                setTimeout(() => {
+                    synonymChallengeIndex++;
+                    renderSynonymMatch(); 
+                }, 2000);
+            }
+        }
+
+        // Initialize application on load
+        init();
+    </script>
+</body>
+</html>
